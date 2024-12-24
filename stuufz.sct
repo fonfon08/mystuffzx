@@ -27,4 +27,8 @@
             } catch (e) {
                 var shell = new ActiveXObject("WScript.Shell");
                 shell.Popup("Error: " + e.message, 0, "Execution Error", 16);
-           
+            }
+        ]]>
+    </script>
+</registration>
+</scriptlet>
